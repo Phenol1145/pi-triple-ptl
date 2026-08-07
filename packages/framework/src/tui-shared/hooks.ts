@@ -1,0 +1,84 @@
+import React, { useState, useCallback, useEffect } from "react";
+import { useInput, useStdout } from "ink";
+
+export function useTabs(tabs: string[], enabled = true) {
+  const [tabIndex, setTabIndex] = useState(0);
+  const activeTab = tabs[tabIndex] ?? tabs[0];
+
+  useInput((input, key) => {
+    if (!enabled) return;
+    if (key.ctrl) return;
+    const digit = parseInt(input, 10);
+    if (digit >= 1 && digit <= Math.min(tabs.length, 9)) {
+      setTabIndex(digit - 1);
+    }
+  });
+
+  const setActiveTab = useCallback(
+    (name: string) => {
+      const idx = tabs.indexOf(name);
+      if (idx >= 0) setTabIndex(idx);
+    },
+    [tabs],
+  );
+
+  return { activeTab, setActiveTab, tabIndex };
+}
+
+export function useRefresh(intervalMs: number, callback: () => void) {
+  useEffect(() => {
+    const timer = setInterval(callback, intervalMs);
+    return () => clearInterval(timer);
+  }, [intervalMs, callback]);
+}
+
+/** 纯函数：表格选择移动（边界钳制），供 hook 与测试共用 */
+export function tableNextIndex(current: number, dir: 1 | -1, rowCount: number): number {
+  if (rowCount <= 0) return 0;
+  return Math.max(0, Math.min(rowCount - 1, current + dir));
+}
+
+/** 表格行选择 hook */
+export function useTableSelection(rowCount: number, enabled = true): { index: number; move: (dir: 1 | -1) => void; reset: () => void; setIndex: React.Dispatch<React.SetStateAction<number>> } {
+  const [index, setIndex] = useState(0);
+  const move = useCallback(
+    (dir: 1 | -1) => {
+      if (!enabled) return;
+      setIndex((i) => tableNextIndex(i, dir, rowCount));
+    },
+    [enabled, rowCount],
+  );
+  const reset = useCallback(() => setIndex(0), []);
+  // 数据收缩时钳制选中行（如刷新后列表变短）
+  useEffect(() => {
+    setIndex((i) => (i >= rowCount ? Math.max(0, rowCount - 1) : i));
+  }, [rowCount]);
+  return { index, move, reset, setIndex };
+}
+
+/** 纯函数：超出上限时把选中行保持在可视窗口内（滚动窗口） */
+export function tableWindow<T>(rows: T[], selected: number, cap: number): { rows: T[]; offset: number } {
+  if (cap <= 0 || rows.length <= cap) return { rows, offset: 0 };
+  const offset = Math.max(0, Math.min(selected, rows.length - cap));
+  return { rows: rows.slice(offset, offset + cap), offset };
+}
+
+export function useTerminalSize() {
+  const { stdout } = useStdout();
+  const [size, setSize] = useState(() => ({
+    columns: stdout.columns ?? 80,
+    rows: stdout.rows ?? 24,
+  }));
+
+  useEffect(() => {
+    const check = () => {
+      const cols = stdout.columns ?? 80;
+      const rows = stdout.rows ?? 24;
+      setSize((prev) => (prev.columns !== cols || prev.rows !== rows ? { columns: cols, rows } : prev));
+    };
+    const timer = setInterval(check, 500);
+    return () => clearInterval(timer);
+  }, [stdout]);
+
+  return size;
+}
