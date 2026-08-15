@@ -1,0 +1,24 @@
+{
+  "name": "@away_from/dev-container",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Pi-Triple dev container — /container 命令族（start/mount/verify/status）封装 dev 容器",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "pi-extension",
+    "pi-triple",
+    "container",
+    "dev"
+  ],
+  "author": "Pi-Triple"
+}
