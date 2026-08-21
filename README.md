@@ -1,12 +1,12 @@
 # pi-triple-ptl
 
-**Pi-Triple PTL** —— 宿主机侧运维/本地执行仓：`ptl` CLI、tmux 多环境共存、mailbox 与 dev 容器扩展。
+**Pi-Triple PTL** —— 宿主机侧运维/本地执行仓：`ptl` CLI、tmux 多环境共存、mailbox 与 dev 容器扩展，以及 dev 容器 / 本地执行器两个 `execution/v1` 执行面。
 
 ![node](https://img.shields.io/badge/node-%3E%3D22-green)
 ![tests](https://img.shields.io/badge/tests-464-brightgreen)
 ![version](https://img.shields.io/badge/version-1.5.0-blue)
 
-- **定位**：让多个 pi 进程以模板隔离方式在 tmux 里并行、共存与切换；PTH 不是 PTL 的后端，而是经 `pth` CLI 调用的独立产品。
+- **定位**：让多个 pi 进程以模板隔离方式在 tmux 里并行、共存与切换；PTH（FRACTA engine 当前代码名）不是 PTL 的后端，而是经 `pth` CLI 调用的独立产品；PTL 托管的 dev 容器与本地执行器以 `execution/v1` 服务端接入 engine。
 - **导航**：Quick Start · [模块](#模块) · [架构](#architecture) · [开发](#development) · [仓库定位](docs/POSITIONING.md) · [文档](#documentation)
 
 ## ✨ Quick Start
@@ -42,7 +42,7 @@ node_modules/.bin/ptl --version   # ptl v1.5.0
   tmux 多环境共存          pi-triple-pth 仓（无包依赖）
 ```
 
-依赖 `@away_from/shared` 与 `@away_from/infra`（npm 包）。安装/测试不触发 PTH 源码下载。
+依赖 `@away_from/shared` 与 `@away_from/infra`（npm 包）。安装/测试不触发 PTH 源码下载。engine 执行面拓扑与本地执行器开发指南见 [docs/fracta-engine-execution-topology.md](docs/fracta-engine-execution-topology.md)。
 
 ## Development
 
