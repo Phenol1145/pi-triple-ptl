@@ -6,6 +6,7 @@
 | 执行面协议 | [execution-surface-v1-design](execution-surface-v1-design.md)（三仓同源） |
 | 执行面拓扑与协议面固定计划 | [fracta-engine-execution-topology](fracta-engine-execution-topology.md)（三仓同源，含本地执行器开发指南） |
 | 决策记录 | [ADR-0001：执行面全部外部化](adr/0001-fracta-engine-external-execution-surfaces.md)（三仓同源） |
+| 决策记录 | [ADR-0002：tool containers 与 execution/v1.1](adr/0002-tool-containers-execution-v11.md)（三仓同源） |
 | 架构 | [architecture](ptl/architecture.md) |
 | PTH 任务提交 | [pth-task-submission](ptl/pth-task-submission.md) |
 | 拆仓报告 | [phase3 报告（主仓归档）](https://github.com/Phenol1145/pi-triple/blob/main/docs/pth/phase3-ptl-split-report.md) |
