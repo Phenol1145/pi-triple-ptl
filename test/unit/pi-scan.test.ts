@@ -11,10 +11,10 @@ const tmuxMocks = vi.hoisted(() => ({
   listPtlSessions: vi.fn().mockReturnValue([]),
   listPtlPanesDetailed: vi.fn().mockReturnValue(new Map()),
 }));
-// toSessionRecords 走 SessionBackend（tmux-backend 内部从 ./tmux.js import）——
-// mock tmux.js 文件本身（shared/index 的 re-export 与 tmux-backend 的相对 import 共享同一文件）
-vi.mock("../../packages/shared/src/tmux.js", async (importOriginal) => {
-  const mod = await importOriginal<typeof import("../../packages/shared/src/tmux.js")>();
+// toSessionRecords 走 SessionBackend（shared 包内 tmux-backend 从 ./tmux.js import）——
+// mock 包的 ./tmux 子路径出口（与 tmux-backend 的相对 import 命中同一 dist 文件）。
+vi.mock("@away_from/shared/tmux", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("@away_from/shared/tmux")>();
   return { ...mod, hasTmux: tmuxMocks.hasTmux, listPtlSessions: tmuxMocks.listPtlSessions, listPtlPanesDetailed: tmuxMocks.listPtlPanesDetailed };
 });
 

@@ -1,19 +1,23 @@
 {
   "name": "@away_from/framework",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "ptl": "./dist/pit.js"
+    "ptl": "./bin/pit.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "scripts": {},
   "dependencies": {
-    "@away_from/infra": "file:../infra",
-    "@away_from/shared": "file:../shared",
+    "@away_from/infra": "^1.5.0",
+    "@away_from/shared": "^1.5.0",
+    "ink": "^5.2.1",
+    "react": "^18.3.1",
+    "string-width": "^7.2.0",
     "zod": "^4.0.0"
   }
 }

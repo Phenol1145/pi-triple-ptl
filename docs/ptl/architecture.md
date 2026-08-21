@@ -1,7 +1,7 @@
 # PTL（Pi-Triple-Lite）架构
 
 > PTL（Pi-Triple-Lite）文档 — 基于 pi 的多环境共存平台（v0.6+ 形态）
-> 双产品全景见顶层 [`ARCHITECTURE.md`](../../ARCHITECTURE.md)。
+> 双产品全景见旧仓顶层 ARCHITECTURE.md：https://github.com/Phenol1145/pi-triple/blob/main/ARCHITECTURE.md
 
 ## 定位
 

@@ -1,0 +1,39 @@
+{
+  "name": "@away_from/pi-triple-ptl",
+  "version": "1.5.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "clean": "rm -rf packages/framework/dist packages/mailbox/dist packages/dev-container/dist",
+    "build": "tsc -p packages/framework && tsc -p packages/mailbox && tsc -p packages/dev-container",
+    "postinstall": "npm run build",
+    "ptl:dev": "tsx packages/framework/src/pit.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc -p packages/framework && tsc -p packages/mailbox && tsc -p packages/dev-container && npm run check:product-boundaries && npm run check:docs-links",
+    "check:product-boundaries": "tsx scripts/check-product-boundaries.ts",
+    "docs:manifest": "tsx scripts/build-docs-manifest.ts",
+    "check:docs-links": "tsx scripts/check-doc-links.ts"
+  },
+  "dependencies": {
+    "@away_from/dev-container": "file:packages/dev-container",
+    "@away_from/framework": "file:packages/framework",
+    "@away_from/infra": "^1.5.0",
+    "@away_from/mailbox": "file:packages/mailbox",
+    "@away_from/shared": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.31",
+    "ink-testing-library": "^4.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

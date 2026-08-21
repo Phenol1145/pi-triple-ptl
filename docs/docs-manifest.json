@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-21T13:38:11.361Z",
+  "taxonomy": {
+    "docs": [
+      "index",
+      "guides",
+      "designs",
+      "contracts",
+      "reports",
+      "envelopes",
+      "decisions",
+      "operations",
+      "releases",
+      "archive",
+      "assets",
+      "artifacts"
+    ],
+    "runtime": [
+      "deps",
+      "host",
+      "container",
+      "dual",
+      "config"
+    ]
+  },
+  "docs": [
+    {
+      "path": "docs/ptl/architecture.md",
+      "category": "guides",
+      "product": "ptl",
+      "status": "active"
+    },
+    {
+      "path": "docs/ptl/authoring.md",
+      "category": "guides",
+      "product": "ptl",
+      "status": "active"
+    },
+    {
+      "path": "docs/ptl/dev-loop.md",
+      "category": "guides",
+      "product": "ptl",
+      "status": "active"
+    },
+    {
+      "path": "docs/ptl/pth-task-submission.md",
+      "category": "guides",
+      "product": "ptl",
+      "status": "active"
+    },
+    {
+      "path": "docs/ptl/pth-usage.md",
+      "category": "guides",
+      "product": "ptl",
+      "status": "active"
+    }
+  ],
+  "codeRuntime": [
+    {
+      "path": "packages/shared/",
+      "runtime": "deps",
+      "note": "共享配置/路径/版本等基础能力（PTL/PTH 共用）"
+    },
+    {
+      "path": "packages/infra/",
+      "runtime": "deps",
+      "note": "模型路由/日志/平台/sdk 适配/容器运行时协议（共用基础包）"
+    },
+    {
+      "path": "packages/pth-memory/",
+      "runtime": "deps",
+      "note": "PTH 记忆库（进程内使用，非独立服务）"
+    },
+    {
+      "path": "packages/mailbox/",
+      "runtime": "deps",
+      "note": "跨会话邮箱（库，非独立服务）"
+    },
+    {
+      "path": "packages/framework/",
+      "runtime": "host",
+      "note": "PTL CLI/TUI/容器运维命令，宿主机执行"
+    },
+    {
+      "path": "scripts/",
+      "runtime": "host",
+      "note": "宿主机工具脚本（pth/pth CLI 入口、验收/维护脚本）"
+    },
+    {
+      "path": "packages/dev-container/",
+      "runtime": "host",
+      "note": "宿主机控制 dev 容器（start/mount/verify）"
+    },
+    {
+      "path": "src/pth/",
+      "runtime": "dual",
+      "note": "PTH 主服务：容器内生产运行；宿主机 node dist/pth/main.js 试运行/tsx dev"
+    },
+    {
+      "path": "packages/pth-console/",
+      "runtime": "dual",
+      "note": "PTH CLI/loopback Web：宿主机交互为主；server 组件可随部署进容器"
+    },
+    {
+      "path": "deploy/docker-monitor/",
+      "runtime": "dual",
+      "note": "本机监控服务：宿主机 MONITOR_HOST 直跑，也可入容器采集"
+    },
+    {
+      "path": "packages/pth-sandbox/",
+      "runtime": "container",
+      "note": "隔离执行容器（kernel 池 + exec API）"
+    },
+    {
+      "path": "toolstore/",
+      "runtime": "container",
+      "note": "PTH 容器内扩展代码库/策略/命名编译单元"
+    },
+    {
+      "path": "extensions/",
+      "runtime": "container",
+      "note": "PTH 容器内扩展源码"
+    },
+    {
+      "path": "deploy/Dockerfile*",
+      "runtime": "container",
+      "note": "容器镜像构建（主服务/sandbox/dev/jupyter）"
+    },
+    {
+      "path": "deploy/docker-compose*.yaml",
+      "runtime": "config",
+      "note": "compose 拓扑"
+    },
+    {
+      "path": "deploy/*.json",
+      "runtime": "config",
+      "note": "runtime lock 与部署描述"
+    },
+    {
+      "path": "deploy/.env.pth.secrets*",
+      "runtime": "config",
+      "note": "密钥（gitignore 的 secrets + 提交的 example）"
+    },
+    {
+      "path": "config/",
+      "runtime": "config",
+      "note": "pi 模板/配置面"
+    },
+    {
+      "path": "tsconfig*.json · package.json · package-lock.json",
+      "runtime": "config",
+      "note": "workspace/构建配置"
+    }
+  ]
+}
