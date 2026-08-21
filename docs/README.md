@@ -3,6 +3,7 @@
 | 主题 | 文档 |
 |------|------|
 | 仓库定位 | [POSITIONING](POSITIONING.md)（三仓同源） |
+| 执行面协议 | [execution-surface-v1-design](execution-surface-v1-design.md)（三仓同源） |
 | 架构 | [architecture](ptl/architecture.md) |
 | PTH 任务提交 | [pth-task-submission](ptl/pth-task-submission.md) |
 | 拆仓报告 | [phase3 报告（主仓归档）](https://github.com/Phenol1145/pi-triple/blob/main/docs/pth/phase3-ptl-split-report.md) |
