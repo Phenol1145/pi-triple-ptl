@@ -226,6 +226,11 @@ export async function main() {
       }
       break;
     }
+    case "local-exec": {
+      const { cmdLocalExec } = await import("../execution/local-exec-cli.js");
+      await cmdLocalExec(flags);
+      break;
+    }
     case "ui":
     case "lab":
     case "submit":

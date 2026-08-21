@@ -62,6 +62,7 @@ const HELP_GROUPS: HelpGroup[] = [
       ["stack logs <service> [--tail n]", "容器日志"],
       ["stack upgrade", "重建镜像 + 重启"],
       ["stack exec <service> -- <cmd>", "容器内执行命令"],
+      ["local-exec [--port p]", "本地执行器（execution/v1.1，宿主 Lean 工具链）"],
       ["program dev <dir>", "本地调试 agent 程序（pi 原生会话）"],
     ],
   },
@@ -213,6 +214,12 @@ const COMMAND_HELP: Record<string, { usage: string; desc: string; flags?: Array<
   hub: { usage: "ptl hub（已退役）", desc: "PTH 交互迁移到 pth CLI；容器运维用 ptl stack；本地程序调试用 ptl program dev" },
   program: { usage: "ptl program dev <dir> [pi args…]", desc: "本地调试 agent 程序（pi 原生会话加载 systemPrompt + skills）" },
   stack: { usage: "ptl stack <deploy|status|logs|upgrade|exec>", desc: "容器运维（pth.deployment.json → 容器后端）" },
+  "local-exec": {
+    usage: "ptl local-exec [--port p]",
+    desc: "启动本地执行器（execution/v1.1 · profile=host · Lean 宿主工具链）；LOCAL_EXEC_SHARED_SECRET 必填，只监听 127.0.0.1",
+    flags: [["--port <n>", "监听端口（默认 LOCAL_EXEC_PORT ?? 8787）"]],
+    examples: ["LOCAL_EXEC_SHARED_SECRET=... ptl local-exec", "ptl local-exec --port 8787"],
+  },
   onboard: { usage: "ptl onboard", desc: "首次导引向导：环境检查→配置→模板→验证" },
   doctor: { usage: "ptl doctor", desc: "完整健康检查 + 交互修复" },
 };
