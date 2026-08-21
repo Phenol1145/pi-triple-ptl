@@ -27,6 +27,8 @@ import {
 
 const USAGE = [
   "\x1b[1m/container — dev 容器命令族\x1b[0m",
+  "\x1b[33m⚠️ deprecated（T3，2026-08-22）：工具执行已迁到 `pth tools` 三域容器\x1b[0m",
+  "\x1b[33m   （compiled/network/secrets + execution 协议）；本命令族进入退役兼容期。\x1b[0m",
   "  /container start [--name <service>]  启动 dev 容器（默认 service=dev）",
   "  /container mount <dir>               挂载目录到 /works/<name>（写 compose dev.volumes）",
   "  /container verify <cmd>              容器内运行验证命令（bash -lc，退出码透传）",
