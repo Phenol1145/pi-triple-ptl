@@ -108,6 +108,15 @@ export async function cmdStackExec(passthrough: string[], flags: Record<string, 
   }
   const dep = await loadDeployment(deploymentPath(process.cwd()));
   const backend = await getBackend(backendKind);
+  // P2：execution/v1 执行面优先；未实现执行面的后端回退生命周期 exec
+  if (backend.executionBackend) {
+    const execution = await backend.executionBackend(dep, service);
+    const result = await execution.execute({ cmd, profile: "dev-container" });
+    process.stdout.write(result.stdout);
+    process.stderr.write(result.stderr);
+    process.exitCode = result.exitCode === 0 ? 0 : 1;
+    return;
+  }
   const r = await backend.exec(dep, service, cmd);
   process.stdout.write(r.stdout);
   process.stderr.write(r.stderr);

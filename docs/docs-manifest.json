@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-21T14:38:26.141Z",
+  "generatedAt": "2026-08-21T15:46:47.604Z",
   "taxonomy": {
     "docs": [
       "index",
@@ -25,6 +25,18 @@
     ]
   },
   "docs": [
+    {
+      "path": "docs/execution-surface-v1-design.md",
+      "category": "archive",
+      "product": "shared",
+      "status": "historical"
+    },
+    {
+      "path": "docs/POSITIONING.md",
+      "category": "archive",
+      "product": "shared",
+      "status": "historical"
+    },
     {
       "path": "docs/ptl/architecture.md",
       "category": "guides",

@@ -6,6 +6,7 @@
  */
 
 import type { Deployment } from "./deployment.js";
+import type { ExecutionBackend } from "@away_from/shared/execution";
 
 export type BackendKind = "docker" | "podman" | "k8s";
 
@@ -32,6 +33,8 @@ export interface ContainerBackend {
   logs(deployment: Deployment, service: string, tail?: number): Promise<string>;
   restart(deployment: Deployment, service?: string): Promise<void>;
   exec(deployment: Deployment, service: string, cmd: string[]): Promise<{ code: number; stdout: string; stderr: string }>;
+  /** execution/v1 执行面（P2 起实现）；未实现时调用方回退 exec 生命周期接口 */
+  executionBackend?(deployment: Deployment, service: string): Promise<ExecutionBackend>;
   available(): Promise<boolean>;
 }
 

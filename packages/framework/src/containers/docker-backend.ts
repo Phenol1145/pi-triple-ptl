@@ -12,6 +12,8 @@ import { join, resolve } from "node:path";
 import type { Deployment } from "./deployment.js";
 import { registerContainerBackend } from "./backend.js";
 import type { ContainerBackend, BackendStatus, ServiceStatus } from "./backend.js";
+import { DockerExecBackend } from "../execution/docker-exec-backend.js";
+import type { ExecutionBackend } from "@away_from/shared/execution";
 
 export const COMPOSE_GEN_DIR = "pth.deploy";
 
@@ -200,6 +202,12 @@ export class DockerBackend implements ContainerBackend {
   async exec(dep: Deployment, service: string, cmd: string[]): Promise<{ code: number; stdout: string; stderr: string }> {
     const file = await this.composeFile(dep);
     return run("docker", [...this.base(dep), "-f", file, "--project-name", dep.name, "exec", "-T", service, ...cmd]);
+  }
+
+  /** execution/v1 执行面：部署描述渲染出的 compose 作为 DockerExecBackend 的上下文 */
+  async executionBackend(dep: Deployment, service: string): Promise<ExecutionBackend> {
+    const file = await this.composeFile(dep);
+    return new DockerExecBackend({ composeFile: file, projectName: dep.name, service });
   }
 }
 
