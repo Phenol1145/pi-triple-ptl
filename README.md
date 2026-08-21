@@ -7,7 +7,7 @@
 ![version](https://img.shields.io/badge/version-1.5.0-blue)
 
 - **定位**：让多个 pi 进程以模板隔离方式在 tmux 里并行、共存与切换；PTH 不是 PTL 的后端，而是经 `pth` CLI 调用的独立产品。
-- **导航**：Quick Start · [模块](#模块) · [架构](#architecture) · [开发](#development) · [文档](#documentation)
+- **导航**：Quick Start · [模块](#模块) · [架构](#architecture) · [开发](#development) · [仓库定位](docs/POSITIONING.md) · [文档](#documentation)
 
 ## ✨ Quick Start
 
