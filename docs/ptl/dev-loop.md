@@ -11,10 +11,10 @@ v0.9 升级 PTL 的工作方式：**PTL 主会话不自己执行开发任务**�
 ```
 ┌─ PTL 主会话（多环境共存平台）───────────────────────┐
 │ ① 写计划（按行切分为任务）                          │
-│ ② ptl hub job submit "<计划>" [--tasks n] [--tags] │
+│ ② pth job submit "<计划>" [--tasks n] [--tags] │
 │    → 立即返回 jobId【脱手】——主会话继续处理其他事物  │
-│ ③ 需要时：ptl hub job status <id>  进度             │
-│            ptl hub job fetch <id>  产物             │
+│ ③ 需要时：pth job status <id>  进度             │
+│            pth job fetch <id>  产物             │
 │    → fetch 顺带性能归档（.perf-bench/jobs/）         │
 └─────────────────────────────────────────────────────┘
         ↓ 提交（HTTP POST /api/v1/kernel/jobs——兼容通道）
@@ -28,15 +28,15 @@ v0.9 升级 PTL 的工作方式：**PTL 主会话不自己执行开发任务**�
 ## 命令
 
 ```
-ptl hub job submit "<计划文本>" [--tasks n] [--tags a,b]   # 计划按行→任务；立即返回 jobId
-ptl hub job status [jobId]                                 # 列表（聚合进度） / 单 job 任务明细
-ptl hub job fetch <jobId>                                  # 产物汇总（值+exec 耗时）+ 性能归档
+pth job submit "<计划文本>" [--tasks n] [--tags a,b]   # 计划按行→任务；立即返回 jobId
+pth job status [jobId]                                 # 列表（聚合进度） / 单 job 任务明细
+pth job fetch <jobId>                                  # 产物汇总（值+exec 耗时）+ 性能归档
 ```
 
 ## 性能数据（V8 优化铺垫）
 
-- `ptl hub bench`：7 类基准任务（ts/py/bash/c 编译/记忆/扩展/agent）——全执行路径基准——归档 `.perf-bench/bench-*.json` + `--compare` 跨轮 diff
-- `ptl hub job fetch`：每 job 执行耗时 → `.perf-bench/jobs/<jobId>.json`
+- `pth bench`：7 类基准任务（ts/py/bash/c 编译/记忆/扩展/agent）——全执行路径基准——归档 `.perf-bench/bench-*.json` + `--compare` 跨轮 diff
+- `pth job fetch`：每 job 执行耗时 → `.perf-bench/jobs/<jobId>.json`
 - 数据面：任务 exec 耗时（outputRef.durationMs）+ 系统快照（/kernel/status）——V8 引擎专项优化（v0.9）的实测依据
 
 ## 多 job 并行

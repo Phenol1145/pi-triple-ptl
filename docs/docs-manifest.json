@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-21T13:38:11.361Z",
+  "generatedAt": "2026-08-21T14:38:26.141Z",
   "taxonomy": {
     "docs": [
       "index",
@@ -53,6 +53,12 @@
       "path": "docs/ptl/pth-usage.md",
       "category": "guides",
       "product": "ptl",
+      "status": "active"
+    },
+    {
+      "path": "docs/README.md",
+      "category": "index",
+      "product": "shared",
       "status": "active"
     }
   ],

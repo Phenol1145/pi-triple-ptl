@@ -30,7 +30,7 @@ PTL 是**基于 pi 的多环境共存平台**。不维护自己的 agent runtime
 │  ├── lab-data/ arena/telemetry（模型竞技数据）                    │
 │  └── shared-layer.ts 共享层 symlink 注入                          │
 ├──────────────────────────────────────────────────────────────────┤
-│  packages/shared/  @pi-triple/shared 基础件                       │
+│  node_modules/@away_from/shared · @away_from/infra（npm 依赖层）    │
 │  config/tmux/registry/session-state/presence/output/             │
 │  template-agents/version-check/warnings                          │
 ├──────────────────────────────────────────────────────────────────┤
@@ -68,10 +68,10 @@ PTL 是**基于 pi 的多环境共存平台**。不维护自己的 agent runtime
 | **agent** | `ptl agent run/clean` | 一次性 agent 实例 |
 | **运维** | `ptl onboard/doctor/status/install/remove` | 导引/诊断/扩展 |
 | | `ptl shared status/init` | 共享层操作 |
-| **PTH 调用（兼容通道）** | `ptl hub submit/run/dev/programs` | agent 程序提交/远端运行（HTTP 桥兼容） |
-| | `ptl hub kernel tasks/batch/status` | PTH 任务发布/batch 控制（HTTP 桥兼容） |
-| | `ptl hub observe/debug/request/respond` | 观测/调试/回退 |
-| | `ptl hub deploy/status/logs/upgrade/exec` | 容器运维（v0.7 新增） |
+| **PTH 调用（v1.5 拆仓后）** | `pth program submit/run/list` | agent 程序提交/远端运行/列表（原 ptl hub submit/run/programs） |
+| | `pth kernel tasks/batch/templates/status` | PTH 任务发布/batch 控制 |
+| | `pth request(s)/respond/observe/debug/bench/job/console/lineage/trigger` | 回退/观测/调试 |
+| **容器运维** | `ptl stack deploy/status/logs/upgrade/exec` | PTH 容器抽象运维（原 ptl hub deploy 族） |
 
 ### 模式分辨
 
@@ -100,16 +100,16 @@ ptl                             → 上手指引
 
 ## 调用 PTH 的通道
 
-规范接口是 **PTH CLI**（`pth submit/status/wait`）。当前 `ptl hub` 族仍经 HTTP 访问 PTH gateway（`/api/v1/*`——Bearer 认证），作为兼容通道保留：
+规范接口是 **PTH CLI**（`pth submit/status/wait`）。`ptl hub` 语法已在 v1.5 退役（仅保留迁移提示）：
 
 | 通道 | 命令 | 形态 |
 |------|------|------|
-| 任务池 | `ptl hub kernel tasks add/ls` | 文本/代码/模板参数 → batch 池化 worker 认领 |
-| batch 控制 | `ptl hub kernel batch add/remove` | 扩缩容 |
-| 状态全景 | `ptl hub kernel status` | 批/任务/watchdog 状态 |
-| 程序桥 | `ptl hub submit <dir>` | agent 程序目录（manifest+skills+systemPrompt）→ AgentEngine 一次性 session（SSE 流） |
-| 观测 | `ptl hub observe/debug` | Redis 会话痕迹 / WebSocket 接入 sandbox 调试 |
-| 容器运维 | `ptl hub deploy/status/logs/upgrade/exec` | 容器抽象（v0.7） |
+| 任务池 | `pth kernel tasks add/ls/cancel` | 文本/代码/模板参数 → batch 池化 worker 认领 |
+| batch 控制 | `pth kernel batch add/remove/worker` | 扩缩容 |
+| 状态全景 | `pth kernel status` | 批/任务/watchdog 状态 |
+| 程序桥 | `pth program submit <dir>` / `run <name>` / `list` | agent 程序目录 → AgentEngine 一次性 session（SSE 流） |
+| 观测 | `pth observe/debug` | Redis 会话痕迹 / WebSocket 接入 sandbox 调试 |
+| 容器运维 | `ptl stack deploy/status/logs/upgrade/exec` | 容器抽象（v0.7 由 framework/stack 承接） |
 
 任务路由正交化：flow 显式 → tags 语义 → hash 分片（确定性归属角色——零竞速）。
 
