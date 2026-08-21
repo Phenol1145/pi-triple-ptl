@@ -24,9 +24,9 @@
   "dependencies": {
     "@away_from/dev-container": "file:packages/dev-container",
     "@away_from/framework": "file:packages/framework",
-    "@away_from/infra": "^1.5.0",
+    "@away_from/infra": "^1.6.0",
     "@away_from/mailbox": "file:packages/mailbox",
-    "@away_from/shared": "^1.5.0"
+    "@away_from/shared": "^1.6.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

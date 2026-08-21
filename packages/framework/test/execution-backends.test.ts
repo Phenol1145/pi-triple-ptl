@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { LocalBackend } from "../src/execution/local-backend.js";
 import { DockerExecBackend } from "../src/execution/docker-exec-backend.js";
-import { ExecutionClientError } from "@away_from/shared/execution";
+import { ExecutionClientError, EXECUTION_WIRE } from "@away_from/shared/execution";
 
 describe("execution/v1 PTL backends（P2）", () => {
   it("LocalBackend：argv 数组不经 shell；结果结构与能力声明一致", async () => {
@@ -25,10 +25,12 @@ describe("execution/v1 PTL backends（P2）", () => {
     expect(result.truncated).toMatchObject({ field: "stdout", originalLen: 8, keptLen: 8 });
   });
 
-  it("LocalBackend：profile 不得提升；stream 按能力拒绝", async () => {
+  it("LocalBackend：profile 不得提升；stream 按能力拒绝（v1.1 → MODE_NOT_SUPPORTED）", async () => {
     const backend = new LocalBackend();
     await expect(backend.execute({ cmd: "true", profile: "sandbox-untrusted" })).rejects.toBeInstanceOf(ExecutionClientError);
-    await expect(backend.execute({ cmd: "true", stream: true })).rejects.toMatchObject({ code: "BACKEND_UNAVAILABLE" });
+    await expect(backend.execute({ cmd: "true", stream: true })).rejects.toMatchObject({
+      code: EXECUTION_WIRE.errorCodes.modeNotSupported,
+    });
   });
 
   it("DockerExecBackend：compose exec argv 与路径翻译正确", async () => {
