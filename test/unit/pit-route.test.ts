@@ -24,11 +24,9 @@ describe("resolveTuiPanel", () => {
 });
 
 describe("getDeprecatedMigration", () => {
-  it("ui → ptl tui dashboard", () => {
-    expect(getDeprecatedMigration("ui")).toMatch(/ptl tui dashboard/);
-  });
-  it("lab → ptl tui lab", () => {
-    expect(getDeprecatedMigration("lab")).toMatch(/ptl tui lab/);
+  it("ui/lab → TUI 已废弃提示", () => {
+    expect(getDeprecatedMigration("ui")).toMatch(/TUI 已废弃/);
+    expect(getDeprecatedMigration("lab")).toMatch(/TUI 已废弃/);
   });
   it("submit/run/programs/dev → pth program / ptl program dev", () => {
     expect(getDeprecatedMigration("submit")).toMatch(/pth program submit/);
@@ -36,9 +34,9 @@ describe("getDeprecatedMigration", () => {
     expect(getDeprecatedMigration("programs")).toMatch(/pth program list/);
     expect(getDeprecatedMigration("dev")).toMatch(/ptl program dev/);
   });
-  it("hub → pth CLI / ptl stack 迁移提示", () => {
+  it("hub → pth CLI / pth up·tools·services 迁移提示", () => {
     expect(getDeprecatedMigration("hub")).toMatch(/pth <submit|program|request|observe|debug|bench|job|console|lineage|trigger|kernel>/);
-    expect(getDeprecatedMigration("hub")).toMatch(/ptl stack/);
+    expect(getDeprecatedMigration("hub")).toMatch(/pth up\/tools\/services/);
   });
   it("未废弃命令 → null", () => {
     expect(getDeprecatedMigration("start")).toBeNull();

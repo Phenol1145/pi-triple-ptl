@@ -9,20 +9,21 @@ function capture(fn: () => void): string {
 }
 
 describe("printHelp（分组）", () => {
-  it("含全部组标题", () => {
+  it("含全部组标题（TUI 已移除）", () => {
     const out = capture(printHelp);
-    for (const g of ["日常使用", "可视化 TUI", "Operator Console", "模板与配置", "容器运维与本地程序调试", "PTH 交互", "Agent", "系统与维护"]) {
+    for (const g of ["日常使用", "Operator Console（已迁移）", "模板与配置", "本地程序调试（容器运维已迁 pth）", "PTH 交互", "Agent", "系统与维护"]) {
       expect(out).toContain(g);
     }
+    expect(out).not.toContain("可视化 TUI");
   });
-  it("含 tui/stack/program/pth 命令", () => {
+  it("含 program/pth/迁移提示命令", () => {
     const out = capture(printHelp);
-    expect(out).toContain("tui dashboard");
-    expect(out).toContain("tui lab");
-    expect(out).toContain("stack deploy");
     expect(out).toContain("program dev");
     expect(out).toContain("pth submit");
-    expect(out).toContain("operator [--port p] [--no-open]");
+    expect(out).toContain("pth web");
+    expect(out).toContain("stack …（deprecated）");
+    expect(out).toContain("local-exec（已迁移）");
+    expect(out).not.toContain("tui dashboard");
   });
   it("无 tenant 残留（已改名 template）", () => {
     const out = capture(printHelp);
@@ -32,24 +33,25 @@ describe("printHelp（分组）", () => {
 });
 
 describe("printGettingStarted", () => {
-  it("含 onboard/start/tui dashboard/help 四条指引", () => {
+  it("含 onboard/start/pth web/help 四条指引（tui 已移除）", () => {
     const out = capture(printGettingStarted);
     expect(out).toContain("ptl onboard");
     expect(out).toContain("ptl start");
-    expect(out).toContain("ptl tui dashboard");
+    expect(out).toContain("pth web");
     expect(out).toContain("ptl help");
+    expect(out).not.toContain("tui");
   });
 });
 
 describe("printNamespaceHelp", () => {
-  it("hub → 显示迁移提示（pth/stack/program）", () => {
+  it("hub → 显示迁移提示（pth program）", () => {
     const out = capture(() => printNamespaceHelp("hub"));
-    for (const c of ["已退役", "pth program submit/run/list", "ptl stack"]) expect(out).toContain(c);
+    for (const c of ["已退役", "pth program submit/run/list"]) expect(out).toContain(c);
   });
-  it("tui → 列出 dashboard/lab", () => {
+  it("tui → 显示已废弃提示", () => {
     const out = capture(() => printNamespaceHelp("tui"));
-    expect(out).toContain("dashboard");
-    expect(out).toContain("lab");
+    expect(out).toContain("已废弃");
+    expect(out).not.toContain("dashboard");
   });
 });
 
@@ -59,12 +61,11 @@ describe("printCommandHelp", () => {
     expect(out).toContain("start");
     expect(out).toContain("--template");
   });
-  it("operator → 含用法、--port 与 --no-open", () => {
+  it("operator → 显示已迁移到 pth web", () => {
     const out = capture(() => printCommandHelp("operator"));
-    expect(out).toContain("ptl operator");
-    expect(out).toContain("--port");
-    expect(out).toContain("--no-open");
-    expect(out).toContain("127.0.0.1");
+    expect(out).toContain("已迁移");
+    expect(out).toContain("pth web");
+    expect(out).not.toContain("--no-open");
   });
   it("未知命令 → 退化 printHelp（含分组标题）", () => {
     const out = capture(() => printCommandHelp("nonexistent-cmd"));

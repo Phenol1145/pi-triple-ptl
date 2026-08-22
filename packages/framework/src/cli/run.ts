@@ -10,7 +10,7 @@ import { cmdPi, cmdStart, cmdAttach, cmdSwitch, cmdDetach, cmdRestore } from "./
 import { cmdConfig } from "./config-cmd.js";
 import { resolveMode, routeJsonCommand, doPrintCommand } from "./mode.js";
 import { cmdMigrate, handleUpdate, handleInstallRemove, handleShared } from "./admin.js";
-import { cmdTui, getDeprecatedMigration } from "./route.js";
+import { getDeprecatedMigration } from "./route.js";
 import { cmdAgentRun, cmdAgentClean } from "./agent.js";
 import { cmdDev as cmdProgramDev } from "../program-dev/dev.js";
 import {
@@ -213,6 +213,7 @@ export async function main() {
       break;
     }
     case "stack": {
+      console.log("  \x1b[33m⚠️  ptl stack 已 deprecated：容器生命周期统一由 pth up/status/logs/down + pth tools/services 管理\x1b[0m");
       switch (subcommand) {
         case "deploy": await cmdStackDeploy(passthrough, flags); break;
         case "status": await cmdStackStatus(passthrough, flags); break;
@@ -226,11 +227,9 @@ export async function main() {
       }
       break;
     }
-    case "local-exec": {
-      const { cmdLocalExec } = await import("../execution/local-exec-cli.js");
-      await cmdLocalExec(flags);
-      break;
-    }
+    case "local-exec":
+      console.log(`  \x1b[33m⚠️  ptl local-exec 已迁移到 PTH：请使用 \`pth local-exec\`（pth services 管理其生命周期）\x1b[0m`);
+      process.exit(1);
     case "ui":
     case "lab":
     case "submit":
@@ -264,8 +263,8 @@ export async function main() {
       printGettingStarted();
       break;
     case "tui":
-      await cmdTui(subcommand, flags);
-      break;
+      console.log("  \x1b[33m⚠️  ptl tui 已废弃（产品形态裁决：operator console / JupyterLab 承担前端）\x1b[0m");
+      process.exit(1);
     case "version":
     case "--version":
     case "-v":

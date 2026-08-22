@@ -59,9 +59,9 @@ describe("resolveDispatch — handoff 目标（新命令名）", () => {
     expect(resolveDispatch("hub", [])).toBeNull();
     expect(resolveDispatch("hub", ["bogus"])).toBeNull();
   });
-  it("tui dashboard/lab → ptl tui …；其他 → null", () => {
-    expect(resolveDispatch("tui", ["dashboard"])).toEqual({ kind: "handoff", cmd: "ptl", args: ["tui", "dashboard"] });
-    expect(resolveDispatch("tui", ["lab"])).toEqual({ kind: "handoff", cmd: "ptl", args: ["tui", "lab"] });
+  it("tui（已废弃）→ null；dispatch 不再把手到 TUI 面板", () => {
+    expect(resolveDispatch("tui", ["dashboard"])).toBeNull();
+    expect(resolveDispatch("tui", ["lab"])).toBeNull();
     expect(resolveDispatch("tui", [])).toBeNull();
     expect(resolveDispatch("tui", ["bogus"])).toBeNull();
   });

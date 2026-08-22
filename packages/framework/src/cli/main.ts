@@ -27,16 +27,9 @@ const HELP_GROUPS: HelpGroup[] = [
     ],
   },
   {
-    title: "可视化 TUI", intro: "低门槛可视化操作",
+    title: "Operator Console（已迁移）", intro: "operator console 已迁 PTH 侧",
     commands: [
-      ["tui dashboard", "系统总控面板"],
-      ["tui lab [--template x] [--global]", "开发面板"],
-    ],
-  },
-  {
-    title: "Operator Console", intro: "仅监听 127.0.0.1 的本地 Web 控制台",
-    commands: [
-      ["operator [--port p] [--no-open]", "启动 PTL Operator Console（一次性 bootstrap 链接）"],
+      ["（shell）pth web [--port p]", "PTH Operator Console"],
     ],
   },
   {
@@ -55,15 +48,11 @@ const HELP_GROUPS: HelpGroup[] = [
     ],
   },
   {
-    title: "容器运维与本地程序调试",
+    title: "本地程序调试（容器运维已迁 pth）",
     commands: [
-      ["stack deploy [--rebuild]", "容器部署（声明式描述 → docker 后端）"],
-      ["stack status [--service <s>]", "容器服务状态"],
-      ["stack logs <service> [--tail n]", "容器日志"],
-      ["stack upgrade", "重建镜像 + 重启"],
-      ["stack exec <service> -- <cmd>", "容器内执行命令"],
-      ["local-exec [--port p]", "本地执行器（execution/v1.1，宿主 Lean 工具链）"],
       ["program dev <dir>", "本地调试 agent 程序（pi 原生会话）"],
+      ["stack …（deprecated）", "容器生命周期统一走 pth up/tools/services"],
+      ["local-exec（已迁移）", "使用 pth local-exec + pth services 管理"],
     ],
   },
   {
@@ -115,7 +104,7 @@ export function printGettingStarted(): void {
   printBanner();
   console.log("  首次使用？   \x1b[36mptl onboard\x1b[0m");
   console.log("  日常开发？   \x1b[36mptl start\x1b[0m");
-  console.log("  可视化？     \x1b[36mptl tui dashboard\x1b[0m");
+  console.log("  运维前端？   \x1b[36mpth web\x1b[0m（operator console 已迁 PTH）");
   console.log("  查看全部？   \x1b[36mptl help\x1b[0m");
   console.log("");
 }
@@ -124,8 +113,7 @@ export function printGettingStarted(): void {
 
 const NAMESPACE_HELP: Record<string, Array<[string, string]>> = {
   tui: [
-    ["tui dashboard", "系统总控面板"],
-    ["tui lab [--template x] [--global]", "开发面板"],
+    ["tui（已废弃）", "TUI 产品形态已废弃——operator console（pth web）/ JupyterLab 承担前端"],
   ],
   hub: [
     ["hub", "已退役——PTH 交互请使用 `npm run pth -- <cmd>`"],
@@ -133,17 +121,13 @@ const NAMESPACE_HELP: Record<string, Array<[string, string]>> = {
     ["pth request(s)/respond/observe/debug", "回退请求/观测/调试"],
     ["pth bench/job/console/lineage/trigger/kernel", "PTH 运维与监督"],
     ["ptl program dev <dir>", "本地程序调试（不再经 hub）"],
-    ["ptl stack deploy/status/logs/upgrade/exec", "容器运维（不再经 hub）"],
+    ["pth up/tools/services", "容器运维（不再经 hub；ptl stack 已 deprecated）"],
   ],
   program: [
     ["program dev <dir> [pi args…]", "本地调试 agent 程序（pi 原生会话）"],
   ],
   stack: [
-    ["stack deploy [--backend docker] [--rebuild]", "部署（build + up）"],
-    ["stack status [--service <s>]", "服务状态"],
-    ["stack logs <service> [--tail n]", "日志"],
-    ["stack upgrade", "重建镜像 + 重启"],
-    ["stack exec <service> -- <cmd…>", "容器内命令"],
+    ["stack …（deprecated）", "容器生命周期统一由 pth up/status/logs/down + pth tools/services 管理"],
   ],
   template: [
     ["template ls", "列出模板（别名 + UUID）"],
@@ -204,21 +188,17 @@ const COMMAND_HELP: Record<string, { usage: string; desc: string; flags?: Array<
     flags: [["--template <alias|uuid>", "指定模板"], ["--bg", "纯后台不接入"], ["--name <n>", "命名会话"], ["--model <m>", "覆盖模型"]],
     examples: ["ptl start", "ptl start --template dev", "ptl start --bg --name coding"],
   },
-  tui: { usage: "ptl tui [dashboard|lab]", desc: "打开可视化 TUI 面板（默认 dashboard）" },
+  tui: { usage: "ptl tui（已废弃）", desc: "TUI 产品形态已废弃——前端由 pth web（operator console）与 JupyterLab 承担" },
   operator: {
-    usage: "ptl operator [--port p] [--host 127.0.0.1] [--no-open]",
-    desc: "启动仅监听 127.0.0.1 的 PTL Operator Console（一次性 bootstrap 链接）",
-    flags: [["--port <n>", "监听端口（默认随机可用端口）"], ["--host <127.0.0.1>", "只允许 127.0.0.1"], ["--no-open", "不自动打开浏览器，仅打印链接"]],
-    examples: ["ptl operator", "ptl operator --port 8787 --no-open"],
+    usage: "ptl operator（已迁移）",
+    desc: "operator console 已迁 PTH——使用 pth web [--port p]",
   },
-  hub: { usage: "ptl hub（已退役）", desc: "PTH 交互迁移到 pth CLI；容器运维用 ptl stack；本地程序调试用 ptl program dev" },
+  hub: { usage: "ptl hub（已退役）", desc: "PTH 交互迁移到 pth CLI；容器运维用 pth up/tools/services；本地程序调试用 ptl program dev" },
   program: { usage: "ptl program dev <dir> [pi args…]", desc: "本地调试 agent 程序（pi 原生会话加载 systemPrompt + skills）" },
-  stack: { usage: "ptl stack <deploy|status|logs|upgrade|exec>", desc: "容器运维（pth.deployment.json → 容器后端）" },
+  stack: { usage: "ptl stack（deprecated）", desc: "容器生命周期统一由 pth up/status/logs/down + pth tools/services 管理" },
   "local-exec": {
-    usage: "ptl local-exec [--port p]",
-    desc: "启动本地执行器（execution/v1.1 · profile=host · Lean 宿主工具链）；LOCAL_EXEC_SHARED_SECRET 必填，只监听 127.0.0.1",
-    flags: [["--port <n>", "监听端口（默认 LOCAL_EXEC_PORT ?? 8787）"]],
-    examples: ["LOCAL_EXEC_SHARED_SECRET=... ptl local-exec", "ptl local-exec --port 8787"],
+    usage: "ptl local-exec（已迁移）",
+    desc: "本地执行器已归 PTH——使用 pth local-exec（生命周期由 pth services 管理）",
   },
   onboard: { usage: "ptl onboard", desc: "首次导引向导：环境检查→配置→模板→验证" },
   doctor: { usage: "ptl doctor", desc: "完整健康检查 + 交互修复" },

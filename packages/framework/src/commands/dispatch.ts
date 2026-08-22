@@ -31,7 +31,6 @@ export type DispatchTarget =
 
 const FLOW_SUBCOMMANDS = new Set(["run", "status", "show", "ls", "approve", "reject", "resume", "edit", "set", "graph", "rm", "validate"]);
 const HUB_SUBCOMMANDS = new Set(["submit", "run", "programs", "dev"]);
-const TUI_PANELS = new Set(["dashboard", "lab"]);
 
 export function resolveDispatch(cmd: string, args: string[]): DispatchTarget | null {
   const [sub = "", ...rest] = args;
@@ -94,8 +93,7 @@ export function resolveDispatch(cmd: string, args: string[]): DispatchTarget | n
       if (HUB_SUBCOMMANDS.has(sub)) return { kind: "handoff", cmd: "ptl", args: ["hub", sub, ...rest] };
       return null;
     case "tui":
-      if (TUI_PANELS.has(sub)) return { kind: "handoff", cmd: "ptl", args: ["tui", sub] };
-      return null;
+      return null; // TUI 产品形态已废弃（CLI 不可达）
     case "flow":
       if (FLOW_SUBCOMMANDS.has(sub)) return { kind: "handoff", cmd: "ptl", args: ["flow", sub, ...rest] };
       return null;
@@ -156,7 +154,7 @@ function helpCommand(): Promise<CommandResult> {
       "  env extension-copy|skill-copy     复制扩展/skill（--from <env> --mode 引用|源码）",
       "  shared status                共享层状态",
       "  hub submit|programs|run|dev  PTH 程序",
-      "  tui dashboard|lab            打开 TUI 面板",
+      "  tui（已废弃）                前端 = pth web / JupyterLab",
       "  flow …                       工作流管理",
       "  help                         此帮助",
       "  quit                         退出",

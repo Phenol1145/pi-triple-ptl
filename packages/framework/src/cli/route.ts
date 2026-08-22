@@ -24,9 +24,9 @@ export function resolveTuiPanel(subcommand: string | undefined): TuiPanel {
 // ─── deprecated（clean break：旧命令仅提示迁移）────────────────
 
 export const DEPRECATED_COMMANDS: Record<string, string> = {
-  ui: "ptl tui dashboard",
-  lab: "ptl tui lab",
-  hub: "pth <submit|program|request|observe|debug|bench|job|console|lineage|trigger|kernel>（PTH 交互）与 ptl stack（容器运维）",
+  ui: "TUI 已废弃——前端由 pth web（operator console）/ JupyterLab 承担",
+  lab: "TUI 已废弃——前端由 pth web（operator console）/ JupyterLab 承担",
+  hub: "pth <submit|program|request|observe|debug|bench|job|console|lineage|trigger|kernel>（PTH 交互）与 pth up/tools/services（容器运维）",
   submit: "pth program submit",
   run: "pth program run",
   programs: "pth program list",
