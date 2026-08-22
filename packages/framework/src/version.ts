@@ -35,6 +35,14 @@ export function resolveRepoRootPackageJson(moduleUrl: string): { name?: string; 
 
 export function getPtlVersion(): string {
   if (cachedVersion) return cachedVersion;
+  // 已安装包形态：dist/version.js → ../package.json（@away_from/framework 自身）
+  try {
+    const near = JSON.parse(fs.readFileSync(fileURLToPath(new URL("../package.json", import.meta.url)), "utf-8")) as { name?: string; version?: string };
+    if (near.name === "@away_from/framework" && typeof near.version === "string") {
+      cachedVersion = near.version;
+      return cachedVersion;
+    }
+  } catch { /* 回退仓库根探测 */ }
   cachedVersion = resolveRepoRootPackageJson(import.meta.url)?.version ?? "0.0.0";
   return cachedVersion;
 }
