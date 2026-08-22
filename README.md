@@ -1,22 +1,22 @@
 # pi-triple-ptl
 
-**Pi-Triple PTL** —— 宿主机侧运维/本地执行仓：`ptl` CLI、tmux 多环境共存、mailbox 与 dev 容器扩展，以及 dev 容器 / 本地执行器两个 `execution/v1` 执行面。
+**Pi-Triple PTL** —— 宿主机本地开发工具带：`ptl` CLI、tmux 多环境共存、mailbox 与 `ptl program dev`；`packages/dev-container` 与 `ptl stack` 处于 deprecated 兼容期（tool containers / 本地执行器 / jupyter 部署事实源已迁 PTH 仓）。
 
 ![node](https://img.shields.io/badge/node-%3E%3D22-green)
 ![tests](https://img.shields.io/badge/tests-464-brightgreen)
-![version](https://img.shields.io/badge/version-1.5.0-blue)
+![version](https://img.shields.io/badge/version-1.6.0-blue)
 
-- **定位**：让多个 pi 进程以模板隔离方式在 tmux 里并行、共存与切换；PTH（FRACTA engine 当前代码名）不是 PTL 的后端，而是经 `pth` CLI 调用的独立产品；PTL 托管的 dev 容器与本地执行器以 `execution/v1` 服务端接入 engine。
+- **定位**：让多个 pi 进程以模板隔离方式在 tmux 里并行、共存与切换；PTH（FRACTA engine 当前代码名）不是 PTL 的后端，而是经 `pth` CLI 调用的独立产品；执行面（sandbox / tool containers / 本地执行器 / jupyter）均归 PTH 仓。
 - **导航**：Quick Start · [模块](#模块) · [架构](#architecture) · [开发](#development) · [仓库定位](docs/POSITIONING.md) · [文档](#documentation)
 
 ## ✨ Quick Start
 
 ```bash
-# 需先发布 @away_from/shared@1.5.0 / @away_from/infra@1.5.0（pi-triple-deps）
+# 依赖已发布包 @away_from/shared@1.6.x / @away_from/infra@1.6.x（pi-triple-deps）
 git clone https://github.com/Phenol1145/pi-triple-ptl.git
 cd pi-triple-ptl
 npm install          # postinstall 自动 build；node_modules/.bin/ptl 即装即用
-node_modules/.bin/ptl --version   # ptl v1.5.0
+node_modules/.bin/ptl --version   # ptl v1.6.x
 ```
 
 ## 模块
@@ -35,14 +35,14 @@ node_modules/.bin/ptl --version   # ptl v1.5.0
 ```
 ┌─────────────────────────────────────────────┐
 │                ptl CLI（framework）          │
-│  env · stack · program dev · session · TUI  │
+│  env · stack(deprecated) · program dev · session · TUI(废弃) │
 └───────┬──────────────────────┬──────────────┘
         │ pi × tmux            │ pth CLI / HTTP API v1
         ▼                      ▼
   tmux 多环境共存          pi-triple-pth 仓（无包依赖）
 ```
 
-依赖 `@away_from/shared` 与 `@away_from/infra`（npm 包）。安装/测试不触发 PTH 源码下载。engine 执行面拓扑与本地执行器开发指南见 [docs/fracta-engine-execution-topology.md](docs/fracta-engine-execution-topology.md)。
+依赖 `@away_from/shared` 与 `@away_from/infra`（npm 包）。安装/测试不触发 PTH 源码下载。engine 执行面拓扑见 [docs/fracta-engine-execution-topology.md](docs/fracta-engine-execution-topology.md)（本地执行器归 PTH 仓）。
 
 ## Development
 

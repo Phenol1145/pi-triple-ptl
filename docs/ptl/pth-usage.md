@@ -1,8 +1,8 @@
 # PTH 使用说明（PTL 侧用户手册）
 
-> 适用对象：PTL 平台用户——通过 **PTH CLI**（`pth submit/status/wait`）调用 PTH；`ptl hub` 与 REST API 为兼容通道。
-> 相关文档：`docs/pth/orchestration.md`（编排分工）、`docs/pth/agent-construction.md`（构建体系）。
-> 文中 `$PTH_API` 为 PTH 网关地址占位符（示例用 `http://localhost:8787`——请替换为你的网关地址；`ptl hub` 命令自动使用已配置的网关）。
+> 适用对象：PTL 平台用户——通过 **PTH CLI**（`pth submit/status/wait`）调用 PTH；`ptl hub` 语法已退役（仅迁移提示）；REST 为兼容通道。
+> 相关文档：[pi-triple-pth 仓 docs/pth/orchestration.md](https://github.com/Phenol1145/pi-triple-pth/blob/main/docs/pth/orchestration.md)（编排分工）、[agent-construction.md](https://github.com/Phenol1145/pi-triple-pth/blob/main/docs/pth/agent-construction.md)（构建体系）。
+> 文中 `$PTH_API` 为 PTH 网关地址占位符（示例用 `http://localhost:3000`——engine 本机端口；`pth` 命令使用 `PTH_API`/`PTH_TOKEN` 或 `ptl config` 的迁移配置）。
 
 ---
 
@@ -53,11 +53,11 @@ origin (gen 0 · 全能 · tags ["origin"] · thinking high · accepter writer)
 - `验收角色`：`writer`（可写产物）或 `read-only`（只读审查）
 - `访问权限`：PTC 能力白名单（fs/memory/readSource/…）
 
-### 1.2 查看谱系（ptl hub lineage tree / REST）
+### 1.2 查看谱系（pth lineage tree / REST）
 
 ```bash
-# ptl hub（推荐——自动用配置的网关）
-ptl hub lineage tree
+# pth（推荐——自动用配置的网关）
+pth lineage tree
 
 # REST：直接拿 JSON 树
 curl -s $PTH_API/api/v1/kernel/lineage
@@ -71,9 +71,9 @@ curl -s $PTH_API/api/v1/kernel/lineage
 状态为 **draft（待审核）**——**不会自动执行分化**（有监督自动化）。
 
 ```bash
-# ptl hub
-ptl hub lineage proposals                 # 列出全部建议
-ptl hub lineage show <proposalId>         # 查看单条建议详情
+# pth
+pth lineage proposals                 # 列出全部建议
+pth lineage show <proposalId>         # 查看单条建议详情
 
 # REST：按 kind + draft 过滤查 memory
 curl -s "$PTH_API/api/v1/kernel/memory?kind=differentiation-proposal&status=draft"
@@ -99,9 +99,9 @@ curl -s "$PTH_API/api/v1/kernel/memory?kind=differentiation-proposal&status=draf
 
 ```bash
 # 批准：注册新角色 → batch 热上线 → role-doc 注入
-ptl hub lineage approve <proposalId>
+pth lineage approve <proposalId>
 # 可选 overrides：指定角色 id / 标签 / prompt / thinking / 能力 / 验收角色
-ptl hub lineage approve <proposalId> --id my-role --label-patterns "code,implement"
+pth lineage approve <proposalId> --id my-role --label-patterns "code,implement"
 
 # REST
 curl -s -X POST $PTH_API/api/v1/kernel/lineage/approve -H "content-type: application/json" -d '
@@ -121,7 +121,7 @@ npm run pth -- roles | tags           # 可派发角色 / 已注册标签
 # （裸 curl 仍可用——见下方旧示例）
 
 # 拒绝：draft → archived
-ptl hub lineage reject <proposalId>
+pth lineage reject <proposalId>
 curl -s -X POST $PTH_API/api/v1/kernel/lineage/reject -H "content-type: application/json" -d '{"proposalId":"diff-xxxx"}'
 ```
 
@@ -276,7 +276,7 @@ refine 任务清单存 memory `kind='refine-task'`（真相源；缺失时 fallb
 | 2 | `insights` | 提炼任务经验/洞察 | `task-insight` | official |
 | 3 | `differentiation` | 角色分化分析：分析执行轨迹中反复出现的子任务模式 → 建议分化（subtasks + suggestedRole） | `differentiation-proposal` | **draft（待审核）** |
 
-任务 3 的产物**不自动执行分化**——仅记录待确认；由监督层（你）经 `ptl hub lineage approve/reject` 流转（见 §1.4）。
+任务 3 的产物**不自动执行分化**——仅记录待确认；由监督层（你）经 `pth lineage approve/reject` 流转（见 §1.4）。
 
 **降级**：LLM 输出解析失败 → 函数源码原样保存（无 spec）——不 crash、不阻塞任务完成。
 
@@ -320,14 +320,14 @@ PTH_REFINE=off pth start        # 默认（不设）= auto
 
 ---
 
-## 4. 观测（ptl hub console / REST）
+## 4. 观测（pth console / REST）
 
-### 4.1 ptl hub console
+### 4.1 pth console
 
 ```bash
-ptl hub console --follow        # 实时活动流（task.claim / agent.step / task.done ...）
-ptl hub console --kernel        # kernel 状态（batches + 任务状态计数 + watchdog crashLog）
-ptl hub console --sandbox       # sandbox 状态（kernel 池 inFlight/idle/capacity + 编译统计 + debug 会话）
+pth console --follow        # 实时活动流（task.claim / agent.step / task.done ...）
+pth console --kernel        # kernel 状态（batches + 任务状态计数 + watchdog crashLog）
+pth console --sandbox       # sandbox 状态（kernel 池 inFlight/idle/capacity + 编译统计 + debug 会话）
 ```
 
 数据面（REST 等价）：
@@ -445,7 +445,7 @@ PTH_AUTOSCALE_MODE / PTH_AUTOSCALE_ROLE_THRESHOLD / PTH_AUTOSCALE_REINFORCE_COPI
 
 **场景 A：跑一个开发任务并确认它被正确路由**
 ```bash
-ptl hub lineage tree                       # 认识角色
+pth lineage tree                       # 认识角色
 curl -s -X POST $PTH_API/api/v1/kernel/tasks -H "content-type: application/json" \
   -d '{"title":"实现X","text":"……","createdBy":"ptl","tags":["code"]}'
 curl -s $PTH_API/api/v1/kernel/tasks/<taskId>          # 看 assigned_role=developer
@@ -458,32 +458,32 @@ curl -s -X POST $PTH_API/api/v1/kernel/triggers -H "content-type: application/js
   {"name":"侦察后验收","event":"task.done","match":{"role":"scout"},
    "task":{"title":"验收 {{taskId}}","text":"检查 {{taskId}} 产物","role":"acceptor","tags":["auto-chain"]},'
   ' "once":true}'
-ptl hub console --follow                    # 观察触发链
+pth console --follow                    # 观察触发链
 ```
 
 **场景 C：角色分化治理**
 ```bash
-ptl hub lineage proposals                   # 看 refine 任务3 产出的 draft 建议
-ptl hub lineage show <proposalId>
-ptl hub lineage approve <proposalId> --id new-role --label-patterns "new-tag"   # 上线
-ptl hub lineage tree                        # 确认新节点
+pth lineage proposals                   # 看 refine 任务3 产出的 draft 建议
+pth lineage show <proposalId>
+pth lineage approve <proposalId> --id new-role --label-patterns "new-tag"   # 上线
+pth lineage tree                        # 确认新节点
 ```
 
 **场景 D：关掉自动提炼**：启动时 `PTH_REFINE=off`；或禁用单个任务：把 `refine-task` 条目 `enabled=false`。
 
-### 2.6 trigger CLI（ptl hub trigger——v0.8 新增）
+### 2.6 trigger CLI（pth trigger——v0.8 新增）
 
-PTH 侧已提供命令族（`ptl hub trigger`），与上面 API 等价：
+PTH 侧已提供命令族（`pth trigger`），与上面 API 等价：
 
 ```bash
-ptl hub trigger ls                                # 列表（id/name/event/match/enabled）
-ptl hub trigger add --name "侦察后验收" --event task.done \
+pth trigger ls                                # 列表（id/name/event/match/enabled）
+pth trigger add --name "侦察后验收" --event task.done \
     --role scout --task-title "验收 {{taskId}}" --task-text "检查侦察产物" \
     --json '{"task":{"role":"acceptor"}}' --once   # --role=匹配条件；任务角色 task.role 经 --json 合并
-ptl hub trigger add --json '{"name":"x","event":"task.failed","task":{"title":"告警","text":"分析"}}'
-ptl hub trigger toggle <id> [--on|--off]          # 启用/禁用（缺省翻转）
-ptl hub trigger rm <id>                           # 删除（archived）
-ptl hub trigger reload                            # 立即重载（引擎 30s 周期外的即时生效）
+pth trigger add --json '{"name":"x","event":"task.failed","task":{"title":"告警","text":"分析"}}'
+pth trigger toggle <id> [--on|--off]          # 启用/禁用（缺省翻转）
+pth trigger rm <id>                           # 删除（archived）
+pth trigger reload                            # 立即重载（引擎 30s 周期外的即时生效）
 ```
 
 > 注意：`--role` 在 trigger add 中 = **匹配条件**（match.role——谁完成触发）；

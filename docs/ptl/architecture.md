@@ -19,11 +19,11 @@ PTL 是**基于 pi 的多环境共存平台**。不维护自己的 agent runtime
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                    ptl CLI（packages/framework）                  │
-│  start/pi/session族/template/config/tui/hub族/agent/doctor/install │
+│  start/pi/session族/template/config/tui(已废弃)/hub(已退役)/agent/doctor/install │
 ├──────────────────────────────────────────────────────────────────┤
 │  packages/framework/src/                                         │
 │  ├── cli/      main(入口/help) route(路由) sessions(会话) args    │
-│  ├── bridge/   hub 双桥：submit/kernel/containers/debug/observe… │
+│  ├── bridge/   hub 双桥（已退役：submit/kernel/containers/debug/observe…）│
 │  ├── containers/ 容器抽象（v0.7）：deployment/backend/docker      │
 │  ├── session/  纸带：pi-scan/pi-provider/session-store/trace      │
 │  ├── tui-ptl/  TUI 总控面板（Ink）  │  tui-lab/  模型调试面板     │
@@ -42,11 +42,11 @@ PTL 是**基于 pi 的多环境共存平台**。不维护自己的 agent runtime
 │  ├── data/shared/             共享层（skills/扩展——symlink 源）   │
 │  └── data/mailbox/<uuid>/     邮箱（agent 间通信）                │
 └──────────────────────────────────────────────────────────────────┘
-          ↓ PTH CLI（当前实现经 HTTP 兼容通道）
+          ↓ PTH CLI（pth <cmd>；HTTP/SSE/WS 为兼容通道）
 ┌──────────────────────────────────────────────────────────────────┐
 │  PTH（Pi-Triple-Heavy）——自耦自然语言解释器                       │
 │  Fastify 网关 + kernel 任务池（13 内置角色·四族正交路由）+ sandbox 隔离执行 │
-│  容器化：pth.deployment.json 声明式部署（v0.7）                   │
+│  容器化：deploy/docker-compose.yaml（PTH 仓；pth up/tools/services 管理） │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -61,8 +61,8 @@ PTL 是**基于 pi 的多环境共存平台**。不维护自己的 agent runtime
 | **会话** | `ptl ls` / `ptl attach` / `ptl stop` / `ptl restore` | tmux 后台会话管理 |
 | **纸带** | `ptl session ls/show/fork/clone/transfer/branch/tree/resume/attach/stop` | 会话记录操作 |
 | | `ptl trace ls/show/timeline <agent>` | 追踪 |
-| **TUI** | `ptl tui dashboard` | 系统总控面板（Ink） |
-| | `ptl tui lab [--template x] [--global]` | 模型调试/竞技面板 |
+| **TUI（已废弃）** | ~~`ptl tui dashboard`~~ | 前端已迁 `pth web` operator console / JupyterLab |
+| | ~~`ptl tui lab`~~ | 模型调试面板已随 TUI 产品形态废弃 |
 | **模板** | `ptl template ls/new/rm/rename` | UUID + alias 蓝图管理 |
 | **配置** | `ptl config get/set/unset/init` | pi-triple.json 读写 |
 | **agent** | `ptl agent run/clean` | 一次性 agent 实例 |
@@ -71,7 +71,7 @@ PTL 是**基于 pi 的多环境共存平台**。不维护自己的 agent runtime
 | **PTH 调用（v1.5 拆仓后）** | `pth program submit/run/list` | agent 程序提交/远端运行/列表（原 ptl hub submit/run/programs） |
 | | `pth kernel tasks/batch/templates/status` | PTH 任务发布/batch 控制 |
 | | `pth request(s)/respond/observe/debug/bench/job/console/lineage/trigger` | 回退/观测/调试 |
-| **容器运维** | `ptl stack deploy/status/logs/upgrade/exec` | PTH 容器抽象运维（原 ptl hub deploy 族） |
+| **容器运维（deprecated）** | ~~`ptl stack deploy/status/logs/upgrade/exec`~~ | 统一迁 PTH：`pth up/status/logs/down` + `pth tools` + `pth services` |
 
 ### 模式分辨
 
@@ -79,7 +79,6 @@ PTL 是**基于 pi 的多环境共存平台**。不维护自己的 agent runtime
 ptl start                      → print 模式（直接启动 pi/tmux）
 ptl config get redis            → print 模式（纯文本值）
 ptl config get redis --json     → JSON 模式（`{"ok":true,...}`）
-ptl tui dashboard               → 交互 TTY → TUI；非 TTY → "TUI 需要交互式终端"
 ptl                             → 上手指引
 ```
 
@@ -109,13 +108,18 @@ ptl                             → 上手指引
 | 状态全景 | `pth kernel status` | 批/任务/watchdog 状态 |
 | 程序桥 | `pth program submit <dir>` / `run <name>` / `list` | agent 程序目录 → AgentEngine 一次性 session（SSE 流） |
 | 观测 | `pth observe/debug` | Redis 会话痕迹 / WebSocket 接入 sandbox 调试 |
-| 容器运维 | `ptl stack deploy/status/logs/upgrade/exec` | 容器抽象（v0.7 由 framework/stack 承接） |
+| 容器运维 | ~~`ptl stack deploy/status/logs/upgrade/exec`~~（deprecated） | 统一 `pth up/status/logs/down` + `pth tools` + `pth services` |
 
 任务路由正交化：flow 显式 → tags 语义 → hash 分片（确定性归属角色——零竞速）。
 
-## 容器抽象（v0.7）
+## 容器抽象（v0.7 历史注记）
 
-> 对 PTH 部署的外部运维能力（兼容通道）——不属于 PTL 平台内的 pi 环境。
+> **状态（2026-08-22）**：`ptl stack` 与 `packages/framework/src/containers/` 已进入
+> deprecated 兼容期；容器生命周期统一归 PTH 仓的 `pth up/status/logs/down` +
+> `pth tools` + `pth services`。`pth.deployment.json` 现为 PTH 仓配置核对对照物，
+> 实际执行 `deploy/docker-compose.yaml`，不存在 `pth.deploy/` 渲染目录。本节保留仅作演进背景。
+
+> 历史：对 PTH 部署的外部运维能力（兼容通道）——不属于 PTL 平台内的 pi 环境。
 
 ```
 pth.deployment.json（声明式部署描述——事实源）
@@ -126,7 +130,8 @@ pth.deployment.json（声明式部署描述——事实源）
 docker compose 渲染（已实现） | podman/k8s（扩展点）
 ```
 
-代码：`packages/framework/src/containers/`（PTL 侧运维库——不依赖 PTH 内部实现）。渲染产物 `pth.deploy/`（gitignore）。
+代码（历史）：`packages/framework/src/containers/`（PTL 侧运维库——不依赖 PTH 内部实现）。
+历史渲染产物 `pth.deploy/` 概念已废弃。
 实现注册方向（模块专项 ④）：`backend.ts` 只定义接口与注册表，`docker-backend.ts` 经
 `registerContainerBackend("docker", …)` 自注册；CLI 共享的 `CommandResult` 类型在
 `commands-types.ts`（session 层不反向 import commands.ts）。
@@ -158,8 +163,8 @@ PTL 瘦身（2026-08-09）归档的四目录——保留代码不编译，恢复
 
 ## 与 PTH 的关系（双产品）
 
-- **PTL = 基于 pi 的多环境共存平台**：多 pi 环境并行共存、模板隔离管理——本仓库 `packages/framework` + `packages/shared`
-- **PTH = 自耦自然语言解释器**：自然语言意图 → 执行结果（解释即执行）——`src/pth/`（网关/kernel/sandbox）+ `src/sandbox/`
-- 二者没有前后端关系：PTL 通过 **PTH CLI** 调用 PTH；HTTP/SSE/WebSocket 仅为兼容通道
+- **PTL = 基于 pi 的多环境共存平台**：多 pi 环境并行共存、模板隔离管理——本仓库 `packages/framework` + `mailbox` + `dev-container`（deprecated 兼容期）
+- **PTH = FRACTA engine（当前代码名）**：自然语言意图 → 执行结果（解释即执行）——独立仓库 `pi-triple-pth`（`pth` CLI / 网关 / kernel / sandbox / 部署物）
+- 二者没有前后端关系：PTL 通过 **PTH CLI** 调用 PTH；HTTP/SSE/WebSocket 仅为兼容通道；本地执行器与容器生命周期已迁 PTH
 
 相关：`docs/ptl/authoring.md`（模板编写）· `docs/ptl/pth-task-submission.md`（任务提交）· `docs/pth/deployment.md`（容器部署）。
