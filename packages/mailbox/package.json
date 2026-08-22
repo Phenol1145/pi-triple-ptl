@@ -22,6 +22,6 @@
   ],
   "author": "Pi-Triple",
   "dependencies": {
-    "@away_from/shared": "^1.5.0"
+    "@away_from/shared": "^1.6.0"
   }
 }

@@ -13,8 +13,8 @@
   ],
   "scripts": {},
   "dependencies": {
-    "@away_from/infra": "^1.5.0",
-    "@away_from/shared": "^1.5.0",
+    "@away_from/infra": "^1.6.0",
+    "@away_from/shared": "^1.6.0",
     "ink": "^5.2.1",
     "react": "^18.3.1",
     "string-width": "^7.2.0",
