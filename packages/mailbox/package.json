@@ -1,8 +1,8 @@
 {
   "name": "@away_from/mailbox",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "type": "module",
-  "description": "Pi-Triple mailbox — cross-session communication for pi (原 pit-communicate，/mail 命令)",
+  "description": "Pi-Triple mailbox \u2014 cross-session communication for pi (\u539f pit-communicate\uff0c/mail \u547d\u4ee4)",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

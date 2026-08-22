@@ -1,8 +1,8 @@
 {
   "name": "@away_from/dev-container",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "type": "module",
-  "description": "Pi-Triple dev container — /container 命令族（start/mount/verify/status）封装 dev 容器",
+  "description": "Pi-Triple dev container \u2014 /container \u547d\u4ee4\u65cf\uff08start/mount/verify/status\uff09\u5c01\u88c5 dev \u5bb9\u5668",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
